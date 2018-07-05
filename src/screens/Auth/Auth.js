@@ -66,6 +66,8 @@ class AuthScreen extends Component{
 	}
 }
 
+
+
 const styles = StyleSheet.create({
   containerarriba: {
     flex:1,

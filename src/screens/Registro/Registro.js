@@ -18,36 +18,41 @@ class AuthScreen extends Component{
       value:'',
       valid:false,
       validationRules:{
-        minLength:true
-      }
+        minLength:3
+      },
+      touched:false
     },
     lastName:{
       value:'',
       valid:false,
       validationRules:{
-        minLength:true
-      }
+        minLength:3
+      },
+      touched:false
     },
     email:{
       value:'',
       valid:false,
       validationRules:{
         isEmail:true
-      }
+      },
+      touched:false
     },
     password:{
       value:'',
       valid:false,
       validationRules:{
         minLength:6
-      }
+      },
+      touched:false
     },
     confirmPassword:{
       value:'',
       valid:false,
       validationRules:{
         equalTo:'password'
-      }
+      },
+      touched:false
     }
   }
 }
@@ -60,50 +65,57 @@ class AuthScreen extends Component{
     //que aparecerá en modal cuando verifique sms code
 	}
 
-  updateInputState=(key,value)=>{
+
+  updateInputState = (key, value) => {
     //pa checar que concuerden passwords
-    let connectedValue={};
-    if(this.state.controls[key].validationRules.equalTo){
-      const equalControl=this.state.controls[key].validationRules.equalTo
-      const equalValue=this.state.controls[equalControl].value;
-      connectedValue={
+    let connectedValue = {};
+    if (this.state.controls[key].validationRules.equalTo) {
+      const equalControl = this.state.controls[key].validationRules.equalTo;
+      const equalValue = this.state.controls[equalControl].value;
+      connectedValue = {
         ...connectedValue,
         equalTo: equalValue
-      }
+      };
     }
-    if(key==='password'){
-      connectedValue={
+    if (key === "password") {
+      connectedValue = {
         ...connectedValue,
         equalTo: value
-      }
+      };
     }
     //actualizar estados dynamically depende que input estas usando
-    this.setState(prevState=>{
-      //todo esto es para take las validatio rules y solo update the value
-    //abajo lo llamas: gives us val by default and accept it in updateInputState. 
-    //luego pasas el key que aquí es email. dice cual de los de controls actualizar 
-      return{
+    this.setState(prevState => {
+     //todo esto es para take las validatio rules y solo update the value
+//     //abajo lo llamas: gives us val by default and accept it in updateInputState. 
+//     //luego pasas el key que aquí es email. dice cual de los de controls actualizar 
+      return {
         controls: {
           ...prevState.controls,
-           //esto es pa que si vuelves a cambiar el de arriba, el de abajo de vuelva a desvalidar
-          confirmPassword:{
+          confirmPassword: {
             ...prevState.controls.confirmPassword,
             valid:
-            key==='password'?
-            validate(prevState.controls.confirmPassword.value,
-            prevState.controls,confirmPassword.validationRules,connectedValue):
-            prevState.controls.confirmPassword.valid
+              key === "password"
+                ? validate(
+                    prevState.controls.confirmPassword.value,
+                    prevState.controls.confirmPassword.validationRules,
+                    connectedValue
+                  )
+                : prevState.controls.confirmPassword.valid
           },
-          [key]:{
+          [key]: {
             ...prevState.controls[key],
-            value:value,
-            valid:validate(value,prevState.controls[key].validationRules,connectedValue)
+            value: value,
+            valid: validate(
+              value,
+              prevState.controls[key].validationRules,
+              connectedValue
+            ),
+            touched:true
           }
         }
-      }
-    })
-
-}
+      };
+    });
+  };
   
 
 
@@ -116,21 +128,37 @@ class AuthScreen extends Component{
 			<View style={styles.containerarriba}>
 				<View style={styles.inputContainer}>
 				<Text style={styles.texto}>Unos datos más </Text>
+
 				<DefaultInput placeholder='Nombre' style={styles.input}
         value ={this.state.controls.name.value}
-        onChangeText={(val)=>this.updateInputState('name',val)}/>
+        onChangeText={(val)=>this.updateInputState('name',val)}
+        valid={this.state.controls.name.valid}
+        touched={this.state.controls.name.touched}/>
+
         <DefaultInput placeholder='Apellido' style={styles.input}
         value ={this.state.controls.lastName.value}
-        onChangeText={(val)=>this.updateInputState('lastName',val)}/>
+        onChangeText={(val)=>this.updateInputState('lastName',val)}
+        valid={this.state.controls.lastName.valid}
+        touched={this.state.controls.lastName.touched}/>
+
         <DefaultInput placeholder='Correo' style={styles.input}
         value ={this.state.controls.email.value}
-        onChangeText={(val)=>this.updateInputState('email',val)}/>
+        onChangeText={(val)=>this.updateInputState('email',val)}
+        valid={this.state.controls.email.valid}
+        touched={this.state.controls.email.touched}/>
+
         <DefaultInput placeholder='Contraseña' style={styles.input}
         value ={this.state.controls.password.value}
-        onChangeText={(val)=>this.updateInputState('password',val)}/>
+        onChangeText={val=>this.updateInputState('password',val)}
+        valid={this.state.controls.password.valid}
+        touched={this.state.controls.password.touched}/>
+
         <DefaultInput placeholder='Confirmar contraseña' style={styles.input}
         value ={this.state.controls.confirmPassword.value}
-        onChangeText={(val)=>this.updateInputState('confirmPassword',val)}/>
+        onChangeText={val=>this.updateInputState('confirmPassword',val)}
+        valid={this.state.controls.confirmPassword.valid}
+        touched={this.state.controls.confirmPassword.touched}/>
+
         <TouchableOpacity onPress={this.loginHandler}>
             		<View>
               			<Icon size={50} name="ios-checkmark" color="white" />
