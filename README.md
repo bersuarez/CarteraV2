@@ -1,2 +1,2 @@
-# CarteraV2
+# Wallet
 Wallet app created in React Native. 
